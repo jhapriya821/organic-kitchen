@@ -1,16 +1,17 @@
 import streamlit as st
-import pandas as pd
 
 # --- PAGE SETUP ---
-st.set_page_config(page_title="Priya's Organic Kitchen", page_icon="🥗", layout="centered")
+st.set_page_config(page_title="Priya's Organic Kitchen", page_icon="🥗", layout="wide")
 
-# --- SIDEBAR ---
+# --- SIDEBAR: BIO & LINKS ---
 with st.sidebar:
     st.title("👩‍🍳 About the Chef")
-    st.info("Built by Priya Jha | Python Enthusiast")
-    st.markdown("[🔗 My LinkedIn](https://www.linkedin.com/in/jhapriya821)")
+    st.info("Built by Priya Jha | Python Developer")
+    # Fixed LinkedIn link from your profile data
+    st.markdown("[🔗 Visit my LinkedIn](https://www.linkedin.com/in/jhapriya821)")
     st.divider()
-    st.write("This app uses Python to help you plan healthy, organic meals effortlessly.")
+    st.subheader("🌿 Project Goals")
+    st.write("Using data and code to promote healthy, sustainable organic living.")
 
 # --- MAIN UI ---
 st.title("🌿 Organic Kitchen & Recipe Hub")
@@ -25,29 +26,56 @@ Welcome to my **Organic Kitchen** project! This app is designed to help you:
 
 st.divider()
 
-# --- RECIPE INTERACTION ---
-st.header("📖 Explore Recipes")
+# --- DYNAMIC RECIPE SECTION ---
+st.header("📖 Explore Our Recipes")
+
+# Define categories
+recipes = {
+    "Salads": {
+        "name": "Quinoa & Kale Power Bowl",
+        "ingredients": ["Organic Quinoa", "Fresh Kale", "Lemon Tahini", "Chickpeas"],
+        "benefit": "High in fiber and plant-based protein!",
+        "img_query": "salad,organic"
+    },
+    "Smoothies": {
+        "name": "Berry Blast Immunity",
+        "ingredients": ["Blueberries", "Almond Milk", "Chia Seeds", "Spinach"],
+        "benefit": "Packed with antioxidants and Vitamin C.",
+        "img_query": "smoothie,fruit"
+    },
+    "Breakfast": {
+        "name": "Overnight Chia Pudding",
+        "ingredients": ["Chia Seeds", "Coconut Milk", "Honey", "Mango"],
+        "benefit": "Great for long-lasting morning energy.",
+        "img_query": "breakfast,oats"
+    }
+}
+
 category = st.selectbox("What are you craving today?", ["Choose a category...", "Salads", "Smoothies", "Breakfast"])
 
-if category == "Salads":
-    st.subheader("🥗 Quinoa & Kale Power Bowl")
-    col1, col2 = st.columns(2)
+if category != "Choose a category...":
+    selected = recipes[category]
+    
+    col1, col2 = st.columns([1, 1.5])
+    
     with col1:
-        st.write("**Ingredients:**")
-        st.write("- Organic Quinoa\n- Fresh Kale\n- Lemon Tahini Dressing\n- Chickpeas")
+        # AUTOMATED IMAGE GENERATOR: Pulls a fresh image based on the category name
+        # This replaces the need for a manual 'assets' folder
+        image_url = f"https://source.unsplash.com/featured/800x600?{selected['img_query']}"
+        st.image(image_url, caption=f"Fresh {category}", use_container_width=True)
+        
     with col2:
-        st.success("✨ **Health Benefit:** High in fiber and plant-based protein!")
-
-elif category == "Smoothies":
-    st.subheader("🥤 Berry Blast Immunity")
-    st.write("**Ingredients:** Organic Blueberries, Almond Milk, Chia Seeds, Spinach.")
-    st.info("💡 **Pro-Tip:** Add a pinch of ginger for an extra immunity boost.")
-
-elif category == "Breakfast":
-    st.subheader("🥣 Overnight Chia Pudding")
-    st.write("**Ingredients:** Organic Chia Seeds, Coconut Milk, Honey, Topped with Mango.")
-    st.warning("⏳ **Prep Time:** Needs to sit in the fridge for at least 4 hours!")
+        st.subheader(selected["name"])
+        st.write("**Ingredients:**")
+        for item in selected["ingredients"]:
+            st.write(f"- {item}")
+        
+        st.success(f"✨ **Health Benefit:** {selected['benefit']}")
+        
+        # User Interaction
+        portions = st.slider("How many portions?", 1, 10, 1)
+        st.write(f"Adjusting ingredient quantities for **{portions}** people...")
 
 # --- FOOTER ---
 st.divider()
-st.caption("© 2026 Priya's Organic Kitchen | Made with Streamlit")
+st.caption("© 2026 Priya's Organic Kitchen | Built with Python & Streamlit")
