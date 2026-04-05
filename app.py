@@ -50,4 +50,4 @@ elif category == "Breakfast":
 
 # --- FOOTER ---
 st.divider()
-st.caption
+st.caption("© 2026 Priya's Organic Kitchen | Made with Streamlit")
